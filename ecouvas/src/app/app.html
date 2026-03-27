@@ -1,0 +1,343 @@
+<div class="app-wrapper" [class.dark-theme]="isDarkMode">
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo-area" translate="no" (click)="navigateTo('store')" style="cursor: pointer;">
+        <h1 class="nav-title">Eco<span>Market</span></h1>
+        <span class="badge-aws">Eco-Uvas</span>
+      </div>
+
+      <div class="nav-actions-container">
+        <!-- BOTON PERFIL / AUTH -->
+        <button class="floating-fab-theme" type="button" (click)="toggleAuthModal()" title="Mi Cuenta">
+          @if (authService.isLoggedIn()) {
+          <span class="user-initial" translate="no">{{ authService.getCurrentUser()?.name?.charAt(0) | uppercase
+            }}</span>
+          } @else {
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="var(--text-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="theme-svg-icon">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          }
+        </button>
+
+        <button class="floating-fab-theme" type="button" (click)="toggleTheme()" title="Cambiar Tema">
+          @if (isDarkMode) {
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="var(--text-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="theme-svg-icon">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          } @else {
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="var(--text-dark)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="theme-svg-icon">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          }
+        </button>
+
+        <button class="floating-fab-cart" type="button" (click)="toggleCarrito()">
+          <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" alt="Carrito" class="fab-cart-icon">
+          <span class="fab-cart-badge" translate="no">{{ carritoService.totalKilos }}</span>
+        </button>
+      </div>
+
+    </div>
+  </nav>
+
+  @if (currentView === 'store') {
+  <header class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h2>Uvas frescas del viñedo a tu mesa</h2>
+      <p>Descubre nuestra selección. Cultivadas con prácticas ecológicas para garantizar el mejor sabor natural
+        y el cuidado de la tierra.</p>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <section class="product-grid">
+      @for (uva of uvas; track uva.id) {
+      <div class="product-card">
+        <div class="image-wrapper">
+          <img [src]="uva.imagen" [alt]="uva.nombre" class="product-image">
+          <div class="overlay">
+            <span class="stock-tag">En Stock</span>
+          </div>
+        </div>
+
+        <div class="card-content">
+          <h2 class="product-name">{{ uva.nombre }}</h2>
+          <p class="product-desc">{{ uva.descripcion }}</p>
+
+          <div class="price-section" [class.is-vip]="authService.isLoggedIn()">
+            <div class="price-main-row">
+              <span class="currency">S/</span>
+              <span class="amount">{{ obtenerPrecio(uva).toFixed(2) }}</span>
+              <span class="unit">/ Kg</span>
+            </div>
+            @if (authService.isLoggedIn()) {
+            <div class="vip-discount-row">
+              <span class="price-original">S/ {{ obtenerPrecioRegular(uva).toFixed(2) }}</span>
+              <span class="vip-badge">VIP -15%</span>
+            </div>
+            }
+          </div>
+
+          <button class="btn-comprar-morado" type="button" (click)="abrirModal(uva)">
+            Seleccionar Cantidad
+          </button>
+        </div>
+      </div>
+      }
+    </section>
+  </main>
+  } @else if (currentView === 'dashboard') {
+  <main class="dashboard-container">
+    <div class="dashboard-header">
+      <h2>Panel VIP Personal</h2>
+      <p>Resumen analítico de tus métricas como miembro corporativo</p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-label">Ahorro Generado</span>
+        <span class="kpi-value text-accent">S/ {{ mockKpis.ahorro.toFixed(2) }}</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Uvas Consumidas</span>
+        <span class="kpi-value">{{ mockKpis.kilos }} Kg</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Pedidos Históricos</span>
+        <span class="kpi-value">{{ mockKpis.totales }}</span>
+    </div>
+
+    <!-- GRÁFICO DE AHORRO -->
+    <div class="dashboard-chart-wrapper">
+      <div class="chart-header-row">
+        <h3>Historial Mensual de Ahorro VIP</h3>
+        <span class="chart-subtitle">Calculado en base a tus compras (S/)</span>
+      </div>
+      
+      <div class="chart-container">
+        <!-- Ejes Decorativos (opcional visual) -->
+        <div class="chart-y-axis">
+          <span>Max</span>
+          <span>S/ 0</span>
+        </div>
+
+        <div class="chart-bars-area">
+          @for (item of mockGrafico; track item.mes) {
+          <div class="chart-column">
+            <!-- La magia del CSS: height calculado por Angular dinámicamente -->
+            <div class="chart-bar" [style.height.%]="(item.valor / obtenerMaximoAhorro()) * 100">
+              <div class="chart-tooltip">S/ {{ item.valor.toFixed(2) }}</div>
+            </div>
+            <span class="chart-label-x">{{ item.mes }}</span>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-table-wrapper">
+      <h3>Historial de Solicitudes</h3>
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Transacción</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Monto Final</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (pedido of mockPedidos; track pedido.id) {
+          <tr>
+            <td><strong>{{ pedido.id }}</strong></td>
+            <td>{{ pedido.fecha }}</td>
+            <td><span class="status-badge" [class.success]="pedido.estado === 'Entregado'">{{ pedido.estado }}</span></td>
+            <td>S/ {{ pedido.total.toFixed(2) }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </main>
+  }
+
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h3>Eco<span>Market</span></h3>
+        <p>Tu tienda de confianza para disfrutar los mejores frutos naturales, directo a tu mesa con frescura
+          garantizada.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Enlaces Rápidos</h4>
+        <ul>
+          <li><a href="#">Términos y Condiciones</a></li>
+          <li><a href="#">Política de Privacidad</a></li>
+          <li><a href="#">Contacto y Soporte</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 EcoMarket. Tarea - 6to Semestre.</p>
+    </div>
+  </footer>
+
+  <div class="cart-modal-wrapper" [class.show]="isCartOpen" (click)="toggleCarrito()">
+    <div class="cart-modal" (click)="$event.stopPropagation()">
+      <div class="cart-header">
+        <h2>Tu Pedido</h2>
+        <button class="close-btn" type="button" (click)="toggleCarrito()" translate="no">&times;</button>
+      </div>
+
+      <div class="cart-items-container">
+        @if (carritoService.items.length === 0) {
+        <p class="empty-cart-msg">Tu carrito esta vacio. Llenalo de uvas frescas.</p>
+        } @else {
+        @for (item of carritoService.items; track item.id; let i = $index) {
+        <div class="cart-item">
+          <img [src]="item.imagen" [alt]="item.nombre" class="cart-item-img">
+          <div class="cart-item-details">
+            <h4>{{ item.nombre }}</h4>
+            <p>{{ item.cantidad }} kg x S/ {{ obtenerPrecio(item).toFixed(2) }}</p>
+            <strong>S/ {{ (obtenerPrecio(item) * item.cantidad).toFixed(2) }}</strong>
+          </div>
+          <button class="delete-item-btn" type="button" (click)="carritoService.eliminarItem(i)"
+            title="Eliminar del carrito" translate="no">
+            &times;
+          </button>
+        </div>
+        }
+        }
+      </div>
+
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total a pagar:</span>
+          <span class="total-amount" translate="no">S/ {{ carritoService.totalCosto.toFixed(2) }}</span>
+        </div>
+        <button class="btn-checkout" type="button" [disabled]="carritoService.items.length === 0">
+          Proceder al Pago
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE AUTENTICACION (LOGIN / REGISTRO) -->
+  <div class="cart-modal-wrapper" [class.show]="isAuthModalOpen" (click)="toggleAuthModal()">
+    <div class="cart-modal auth-modal" (click)="$event.stopPropagation()">
+      <div class="cart-header">
+        <h2>Mi Cuenta VIP</h2>
+        <button class="close-btn" type="button" (click)="toggleAuthModal()" translate="no">&times;</button>
+      </div>
+
+      <div class="auth-body">
+        @if (authService.isLoggedIn()) {
+        <div class="auth-logged-in-view">
+          <div class="user-avatar-large">
+            {{ authService.getCurrentUser()?.name?.charAt(0) | uppercase }}
+          </div>
+          <h3>Bienvenido, {{ authService.getCurrentUser()?.name }}</h3>
+          <p class="vip-perk-text">Disfrutas de un <strong>15% de Descuento VIP</strong> continuo en toda la tienda.</p>
+          <div class="auth-buttons-group mt-4">
+            <button class="btn-comprar-morado auth-btn VIP-register-btn" (click)="navigateTo('dashboard')">Ver Mi Panel VIP</button>
+            <button class="btn-comprar-morado auth-btn logout-btn" style="background-color: var(--surface-soft); color: var(--text-dark);" (click)="cerrarSesion()">Cerrar Sesion</button>
+          </div>
+        </div>
+        } @else {
+        <div class="auth-tabs">
+          <button class="auth-tab-btn" [class.active]="authMode === 'login'"
+            (click)="cambiarModoAuth('login')">Ingresar</button>
+          <button class="auth-tab-btn" [class.active]="authMode === 'register'"
+            (click)="cambiarModoAuth('register')">Ser VIP</button>
+        </div>
+
+        <div class="auth-form-container">
+          @if (authMode === 'login') {
+          <div class="auth-form-group">
+            <label>Correo Electronico</label>
+            <input type="email" class="auth-input" placeholder="tu@correo.com" [(ngModel)]="loginEmail">
+          </div>
+          <div class="auth-form-group">
+            <label>Contraseña</label>
+            <input type="password" class="auth-input" placeholder="••••••••" [(ngModel)]="loginPassword">
+          </div>
+          <button class="btn-comprar-morado auth-btn" (click)="iniciarSesion()">Acceder</button>
+          } @else {
+          <div class="auth-form-group">
+            <label>Nombre Completo</label>
+            <input type="text" class="auth-input" placeholder="Juan Perez" [(ngModel)]="regName">
+          </div>
+          <div class="auth-form-group">
+            <label>Correo Electronico</label>
+            <input type="email" class="auth-input" placeholder="tu@correo.com" [(ngModel)]="regEmail">
+          </div>
+          <div class="auth-form-group">
+            <label>Contraseña</label>
+            <input type="password" class="auth-input" placeholder="Crea tu contraseña segura" [(ngModel)]="regPassword">
+          </div>
+          <button class="btn-comprar-morado auth-btn VIP-register-btn" (click)="registrarUsuario()">Crear Cuenta
+            VIP</button>
+          }
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Removed separate overlay since cart-modal-wrapper serves as overlay now -->
+
+  @if (uvaSeleccionadaParaModal) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" type="button" (click)="cerrarModal()" translate="no">&times;</button>
+
+      <div class="modal-header">
+        <img [src]="uvaSeleccionadaParaModal.imagen" [alt]="uvaSeleccionadaParaModal.nombre" class="modal-img">
+        <div class="modal-title-area">
+          <h3>{{ uvaSeleccionadaParaModal.nombre }}</h3>
+          <p class="modal-price">S/ {{ obtenerPrecio(uvaSeleccionadaParaModal).toFixed(2) }} por Kg</p>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-question">Cuantos kilos deseas llevar?</p>
+
+        <div class="modal-kilos-selector">
+          <button class="qty-btn" type="button" (click)="restarKilosModal()" translate="no">&minus;</button>
+          <span class="qty-display-large" translate="no">{{ kilosModal }} kg</span>
+          <button class="qty-btn" type="button" (click)="sumarKilosModal()" translate="no">&#43;</button>
+        </div>
+
+        <div class="modal-total" translate="no">
+          <span>Total calculado:</span>
+          <strong>S/ {{ (obtenerPrecio(uvaSeleccionadaParaModal) * kilosModal).toFixed(2) }}</strong>
+        </div>
+      </div>
+
+      <button class="btn-confirm" type="button" (click)="confirmarAgregarAlCarrito()">
+        Confirmar y Agregar
+      </button>
+    </div>
+  </div>
+  }
+
+  <app-toast></app-toast>
+</div>

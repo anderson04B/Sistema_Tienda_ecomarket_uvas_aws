@@ -1,0 +1,122 @@
+:root {
+  --primary-purple: #6c5ce7;
+  --dark-purple: #4834d4;
+  --aws-orange: #ff9900;
+  --success-green: #27ae60;
+  --bg-light: #f4f7f6;
+}
+
+.main-container {
+  background-color: var(--bg-light);
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.title {
+  color: #2d3436;
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -1px;
+}
+
+.badge-aws {
+  background: var(--primary-purple);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+/* Grilla Responsiva */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Tarjeta Estilo Moderno */
+.product-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(108, 92, 231, 0.15);
+}
+
+.image-wrapper {
+  position: relative;
+  height: 220px;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.1);
+}
+
+.card-content {
+  padding: 25px;
+  text-align: left;
+}
+
+.product-name {
+  font-size: 1.4rem;
+  color: #2d3436;
+  margin: 0 0 10px 0;
+}
+
+.product-desc {
+  color: #636e72;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 20px;
+  height: 40px;
+}
+
+.price-section {
+  margin-bottom: 20px;
+  color: var(--success-green);
+}
+
+.amount {
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.btn-cart {
+  background: var(--primary-purple);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.3s;
+}
+
+.btn-cart:hover {
+  background: var(--dark-purple);
+}
