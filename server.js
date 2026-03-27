@@ -7,9 +7,9 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
+  host: 'ecomarket-db.c5qyc8qqc536.us-east-2.rds.amazonaws.com',
+  user: 'admin',
+  password: 'barraganGG',
   database: 'ecouvas_db'
 });
 
