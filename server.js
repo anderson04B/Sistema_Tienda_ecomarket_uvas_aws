@@ -31,8 +31,8 @@ const ngAppPath = path.join(__dirname, 'ecouvas/dist/ecouvas/browser');
 app.use(express.static(ngAppPath));
 
 // 3. ENRUTADOR FALLBACK (Permite recargar pestañas sin romper la SPA de Angular)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(ngAppPath, 'index.html'));
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'ecouvas/dist/ecouvas/browser/index.html'));
 });
 
 // 4. INICIAR SERVIDOR
