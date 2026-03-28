@@ -132,7 +132,7 @@
         <h3>Historial Mensual de Ahorro VIP</h3>
         <span class="chart-subtitle">Calculado en base a tus compras (S/)</span>
       </div>
-      
+
       <div class="chart-container">
         <!-- Ejes Decorativos (opcional visual) -->
         <div class="chart-y-axis">
@@ -170,7 +170,8 @@
           <tr>
             <td><strong>{{ pedido.id }}</strong></td>
             <td>{{ pedido.fecha }}</td>
-            <td><span class="status-badge" [class.success]="pedido.estado === 'Entregado'">{{ pedido.estado }}</span></td>
+            <td><span class="status-badge" [class.success]="pedido.estado === 'Entregado'">{{ pedido.estado }}</span>
+            </td>
             <td>S/ {{ pedido.total.toFixed(2) }}</td>
           </tr>
           }
@@ -258,8 +259,11 @@
           <h3>Bienvenido, {{ authService.getCurrentUser()?.name }}</h3>
           <p class="vip-perk-text">Disfrutas de un <strong>15% de Descuento VIP</strong> continuo en toda la tienda.</p>
           <div class="auth-buttons-group mt-4">
-            <button class="btn-comprar-morado auth-btn VIP-register-btn" (click)="navigateTo('dashboard')">Ver Mi Panel VIP</button>
-            <button class="btn-comprar-morado auth-btn logout-btn" style="background-color: var(--surface-soft); color: var(--text-dark);" (click)="cerrarSesion()">Cerrar Sesion</button>
+            <button class="btn-comprar-morado auth-btn VIP-register-btn" (click)="navigateTo('dashboard')">Ver Mi Panel
+              VIP</button>
+            <button class="btn-comprar-morado auth-btn logout-btn"
+              style="background-color: var(--surface-soft); color: var(--text-dark);" (click)="cerrarSesion()">Cerrar
+              Sesion</button>
           </div>
         </div>
         } @else {
@@ -303,7 +307,7 @@
     </div>
   </div>
 
-  <!-- Removed separate overlay since cart-modal-wrapper serves as overlay now -->
+ 
 
   @if (uvaSeleccionadaParaModal) {
   <div class="modal-overlay">
