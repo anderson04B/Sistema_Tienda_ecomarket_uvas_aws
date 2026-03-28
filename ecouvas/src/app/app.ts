@@ -60,7 +60,7 @@ export class App implements OnInit {
 
   ngOnInit() {
     this.cargarTemaGuardado();
-    this.http.get('http://localhost:3000/api/uvas').subscribe((datos: any) => {
+    this.http.get('/api/uvas').subscribe((datos: any) => {
       this.uvas = datos;
     });
   }
